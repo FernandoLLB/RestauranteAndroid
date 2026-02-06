@@ -32,15 +32,13 @@ fun RegisterScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var firstname by remember { mutableStateOf("") }
-    var lastname by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
     var usernameError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
     var confirmPasswordError by remember { mutableStateOf<String?>(null) }
-    var firstnameError by remember { mutableStateOf<String?>(null) }
-    var lastnameError by remember { mutableStateOf<String?>(null) }
+    var nameError by remember { mutableStateOf<String?>(null) }
 
     // Navigate when authenticated
     LaunchedEffect(authState) {
@@ -106,34 +104,17 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // First name
+            // Name
             OutlinedTextField(
-                value = firstname,
+                value = name,
                 onValueChange = {
-                    firstname = it
-                    firstnameError = null
+                    name = it
+                    nameError = null
                 },
-                label = { Text("Nombre") },
+                label = { Text("Nombre completo") },
                 leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                isError = firstnameError != null,
-                supportingText = firstnameError?.let { { Text(it) } },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Last name
-            OutlinedTextField(
-                value = lastname,
-                onValueChange = {
-                    lastname = it
-                    lastnameError = null
-                },
-                label = { Text("Apellido") },
-                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                isError = lastnameError != null,
-                supportingText = lastnameError?.let { { Text(it) } },
+                isError = nameError != null,
+                supportingText = nameError?.let { { Text(it) } },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -225,13 +206,8 @@ fun RegisterScreen(
                 onClick = {
                     var hasError = false
 
-                    if (firstname.isBlank()) {
-                        firstnameError = "El nombre es obligatorio"
-                        hasError = true
-                    }
-
-                    if (lastname.isBlank()) {
-                        lastnameError = "El apellido es obligatorio"
+                    if (name.isBlank()) {
+                        nameError = "El nombre es obligatorio"
                         hasError = true
                     }
 
@@ -257,7 +233,7 @@ fun RegisterScreen(
                     }
 
                     if (!hasError) {
-                        authViewModel.register(username, password, firstname, lastname)
+                        authViewModel.register(username, password, name)
                     }
                 },
                 modifier = Modifier

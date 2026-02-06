@@ -95,7 +95,7 @@ class AuthViewModel(
         }
     }
 
-    fun register(email: String, password: String, firstname: String, lastname: String) {
+    fun register(email: String, password: String, name: String) {
         if (!isOnline) {
             _authState.value = AuthState.Error("Sin conexión a internet")
             return
@@ -104,7 +104,7 @@ class AuthViewModel(
         viewModelScope.launch {
             _authState.value = AuthState.Loading
 
-            authRepository.register(email, password, firstname, lastname).fold(
+            authRepository.register(email, password, name).fold(
                 onSuccess = {
                     // After successful registration, login automatically
                     login(email, password)
@@ -117,11 +117,13 @@ class AuthViewModel(
     }
 
     fun logout() {
+        android.util.Log.d("AuthViewModel", "Logout called")
         viewModelScope.launch {
             authRepository.clearSession()
             currentUsername = null
             isAdmin = false
             _authState.value = AuthState.Unauthenticated
+            android.util.Log.d("AuthViewModel", "Logout completed, state set to Unauthenticated")
         }
     }
 

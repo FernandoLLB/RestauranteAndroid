@@ -40,14 +40,32 @@ fun AppNavGraph(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Determine start destination based on auth state
-    val startDestination = when (authState) {
-        is AuthState.Authenticated -> Routes.RECIPES
-        else -> Routes.LOGIN
+    // Determine if user is authenticated
+    val isAuthenticated = authState is AuthState.Authenticated
+
+    // React to auth state changes - navigate accordingly
+    LaunchedEffect(isAuthenticated) {
+        android.util.Log.d("AppNavGraph", "isAuthenticated changed to: $isAuthenticated")
+        android.util.Log.d("AppNavGraph", "Current route: ${navController.currentDestination?.route}")
+
+        if (isAuthenticated) {
+            val current = navController.currentDestination?.route
+            if (current == Routes.LOGIN || current == Routes.REGISTER || current == null) {
+                android.util.Log.d("AppNavGraph", "Navigating to RECIPES")
+                navController.navigate(Routes.RECIPES) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
+        } else if (authState is AuthState.Unauthenticated) {
+            android.util.Log.d("AppNavGraph", "Navigating to LOGIN")
+            navController.navigate(Routes.LOGIN) {
+                popUpTo(0) { inclusive = true }
+            }
+        }
     }
 
     // Show bottom nav only when authenticated and on main screens
-    val showBottomNav = authState is AuthState.Authenticated &&
+    val showBottomNav = isAuthenticated &&
             currentRoute in listOf(Routes.RECIPES, Routes.SETTINGS, Routes.ADMIN)
 
     val bottomNavItems = buildList {
@@ -84,7 +102,7 @@ fun AppNavGraph(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = startDestination,
+            startDestination = Routes.LOGIN,
             modifier = Modifier.padding(innerPadding)
         ) {
             // Auth screens
