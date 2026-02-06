@@ -67,7 +67,7 @@ class AuthViewModel(
         }
     }
 
-    fun login(username: String, password: String) {
+    fun login(email: String, password: String) {
         if (!isOnline) {
             _authState.value = AuthState.Error("Sin conexión a internet")
             return
@@ -75,17 +75,17 @@ class AuthViewModel(
 
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            android.util.Log.d("AuthViewModel", "Intentando login con username: $username")
+            android.util.Log.d("AuthViewModel", "Intentando login con email: $email")
 
-            authRepository.login(username, password).fold(
+            authRepository.login(email, password).fold(
                 onSuccess = { response ->
                     android.util.Log.d("AuthViewModel", "Login exitoso, token recibido")
                     // Decode JWT to check if admin
                     val isAdminUser = decodeJwtRole(response.token)
-                    authRepository.saveSession(response.token, username, isAdminUser)
-                    currentUsername = username
+                    authRepository.saveSession(response.token, email, isAdminUser)
+                    currentUsername = email
                     isAdmin = isAdminUser
-                    _authState.value = AuthState.Authenticated(response.token, isAdminUser, username)
+                    _authState.value = AuthState.Authenticated(response.token, isAdminUser, email)
                 },
                 onFailure = { error ->
                     android.util.Log.e("AuthViewModel", "Login fallido: ${error.message}")
@@ -95,7 +95,7 @@ class AuthViewModel(
         }
     }
 
-    fun register(username: String, password: String, firstname: String, lastname: String) {
+    fun register(email: String, password: String, firstname: String, lastname: String) {
         if (!isOnline) {
             _authState.value = AuthState.Error("Sin conexión a internet")
             return
@@ -104,10 +104,10 @@ class AuthViewModel(
         viewModelScope.launch {
             _authState.value = AuthState.Loading
 
-            authRepository.register(username, password, firstname, lastname).fold(
+            authRepository.register(email, password, firstname, lastname).fold(
                 onSuccess = {
                     // After successful registration, login automatically
-                    login(username, password)
+                    login(email, password)
                 },
                 onFailure = { error ->
                     _authState.value = AuthState.Error(error.message ?: "Error de registro")

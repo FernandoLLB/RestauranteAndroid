@@ -69,14 +69,14 @@ class AuthRepository(private val context: Context) {
     }
 
     suspend fun register(
-        username: String,
+        email: String,
         password: String,
         firstname: String,
         lastname: String
     ): Result<Unit> {
         return try {
             val response = apiService.register(
-                RegisterRequest(username, password, firstname, lastname)
+                RegisterRequest(email, password, firstname, lastname)
             )
             if (response.isSuccessful) {
                 Result.success(Unit)

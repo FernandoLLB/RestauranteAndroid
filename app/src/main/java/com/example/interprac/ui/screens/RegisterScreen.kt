@@ -140,14 +140,14 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Username
+            // Email
             OutlinedTextField(
                 value = username,
                 onValueChange = {
                     username = it
                     usernameError = null
                 },
-                label = { Text("Usuario") },
+                label = { Text("Email") },
                 leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                 isError = usernameError != null,
                 supportingText = usernameError?.let { { Text(it) } },
@@ -236,10 +236,10 @@ fun RegisterScreen(
                     }
 
                     if (username.isBlank()) {
-                        usernameError = "El usuario es obligatorio"
+                        usernameError = "El email es obligatorio"
                         hasError = true
-                    } else if (username.length < 3) {
-                        usernameError = "El usuario debe tener al menos 3 caracteres"
+                    } else if (!username.contains("@")) {
+                        usernameError = "Introduce un email válido"
                         hasError = true
                     }
 

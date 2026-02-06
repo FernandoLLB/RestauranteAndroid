@@ -1,12 +1,12 @@
 package com.example.interprac.data.remote.dto
 
 data class LoginRequest(
-    val username: String,
+    val email: String,
     val password: String
 )
 
 data class RegisterRequest(
-    val username: String,
+    val email: String,
     val password: String,
     val firstname: String,
     val lastname: String
