@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.interprac.data.remote.dto.UserDto
-import com.example.interprac.data.uiState.UiState
+import com.example.interprac.ui.state.UiState
 import com.example.interprac.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

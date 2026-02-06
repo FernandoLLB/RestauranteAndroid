@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import com.example.interprac.data.local.entity.RecipeEntity
-import com.example.interprac.data.uiState.UiState
+import com.example.interprac.ui.state.UiState
 import com.example.interprac.ui.viewmodel.AuthViewModel
 import com.example.interprac.ui.viewmodel.RecipeViewModel
 

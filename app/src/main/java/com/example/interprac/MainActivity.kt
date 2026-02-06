@@ -4,10 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.interprac.data.local.database.AppDatabase
@@ -26,34 +27,37 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Create notification channel
+        // Inicialización de canales de notificación
         NotificationsHelper.createChannelIfNeeded(this)
 
-        // Initialize repositories
+        // Creación manual de dependencias (sin Hilt/Dagger)
         val settingsRepository = SettingsRepository(applicationContext)
         val authRepository = AuthRepository(applicationContext)
         val database = AppDatabase.getDatabase(applicationContext)
         val recipeRepository = RecipeRepository(database.recipeDao())
 
-        // Initialize ViewModels
+        // Inicialización de ViewModels
         val settingsViewModel = SettingsViewModel(settingsRepository)
         val authViewModel = AuthViewModel(authRepository, applicationContext)
         val recipeViewModel = RecipeViewModel(recipeRepository, applicationContext)
 
         setContent {
+            // Tema que reacciona al modo oscuro del ViewModel
             InterPracTheme(settingsViewModel.darkMode) {
-                Surface(
-                    modifier = Modifier
+                val navController = rememberNavController()
+                Scaffold(
+                    Modifier
                         .systemBarsPadding()
                         .fillMaxSize()
-                ) {
-                    val navController = rememberNavController()
-                    AppNavGraph(
-                        navController = navController,
-                        settingsViewModel = settingsViewModel,
-                        authViewModel = authViewModel,
-                        recipeViewModel = recipeViewModel
-                    )
+                ) { innerPadding ->
+                    Box(Modifier.padding(innerPadding)) {
+                        AppNavGraph(
+                            navController = navController,
+                            settingsViewModel = settingsViewModel,
+                            authViewModel = authViewModel,
+                            recipeViewModel = recipeViewModel
+                        )
+                    }
                 }
             }
         }

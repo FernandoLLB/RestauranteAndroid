@@ -17,7 +17,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.interprac.data.uiState.AuthState
+import com.example.interprac.ui.state.AuthState
 import com.example.interprac.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

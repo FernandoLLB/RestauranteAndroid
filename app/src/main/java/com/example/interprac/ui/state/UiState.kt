@@ -1,4 +1,4 @@
-package com.example.interprac.data.uiState
+package com.example.interprac.ui.state
 
 sealed class UiState<out T> {
     object Idle : UiState<Nothing>()

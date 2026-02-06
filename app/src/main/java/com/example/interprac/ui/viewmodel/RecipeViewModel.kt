@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.interprac.data.local.entity.RecipeEntity
 import com.example.interprac.data.repository.RecipeRepository
-import com.example.interprac.data.uiState.UiState
+import com.example.interprac.ui.state.UiState
 import com.example.interprac.notifications.NotificationsHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

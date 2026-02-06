@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.interprac.data.remote.dto.UserDto
 import com.example.interprac.data.repository.AuthRepository
-import com.example.interprac.data.uiState.AuthState
-import com.example.interprac.data.uiState.UiState
+import com.example.interprac.ui.state.AuthState
+import com.example.interprac.ui.state.UiState
 import com.example.interprac.util.NetworkUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
