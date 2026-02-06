@@ -6,14 +6,12 @@ import retrofit2.http.*
 
 interface ApiService {
 
-    // Auth endpoints
     @POST("api/auth/login")
     suspend fun login(@Body request: LoginRequest): Response<AuthResponse>
 
     @POST("api/auth/register")
     suspend fun register(@Body request: RegisterRequest): Response<Unit>
 
-    // Admin endpoints (require Bearer token)
     @GET("api/admin/users")
     suspend fun getAllUsers(@Header("Authorization") token: String): Response<List<UserDto>>
 

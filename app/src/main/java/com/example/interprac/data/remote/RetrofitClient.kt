@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    // Cambia esta URL por la IP de tu servidor si usas dispositivo físico
-    // Para emulador Android: 10.0.2.2 apunta a localhost del PC
     private const val BASE_URL = "http://10.0.2.2:8080/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {

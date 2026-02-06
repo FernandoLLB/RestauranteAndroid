@@ -38,7 +38,6 @@ fun LoginScreen(
     var usernameError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
 
-    // Navigate when authenticated
     LaunchedEffect(authState) {
         if (authState is AuthState.Authenticated) {
             onLoginSuccess()
@@ -53,7 +52,6 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Logo/Icon
         Icon(
             imageVector = Icons.Default.Restaurant,
             contentDescription = null,
@@ -78,7 +76,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Offline indicator
         if (!authViewModel.isOnline) {
             Card(
                 colors = CardDefaults.cardColors(
@@ -96,7 +93,6 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // Email field
         OutlinedTextField(
             value = username,
             onValueChange = {
@@ -113,7 +109,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password field
         OutlinedTextField(
             value = password,
             onValueChange = {
@@ -140,7 +135,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Error message
         if (authState is AuthState.Error) {
             Card(
                 colors = CardDefaults.cardColors(
@@ -157,7 +151,6 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // Login button
         Button(
             onClick = {
                 var hasError = false
@@ -196,10 +189,8 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Register link
         TextButton(onClick = onNavigateToRegister) {
             Text("¿No tienes cuenta? Regístrate")
         }
     }
 }
-

@@ -75,12 +75,9 @@ class AuthViewModel(
 
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            android.util.Log.d("AuthViewModel", "Intentando login con email: $email")
 
             authRepository.login(email, password).fold(
                 onSuccess = { response ->
-                    android.util.Log.d("AuthViewModel", "Login exitoso, token recibido")
-                    // Decode JWT to check if admin
                     val isAdminUser = decodeJwtRole(response.token)
                     authRepository.saveSession(response.token, email, isAdminUser)
                     currentUsername = email
@@ -88,7 +85,6 @@ class AuthViewModel(
                     _authState.value = AuthState.Authenticated(response.token, isAdminUser, email)
                 },
                 onFailure = { error ->
-                    android.util.Log.e("AuthViewModel", "Login fallido: ${error.message}")
                     _authState.value = AuthState.Error(error.message ?: "Error desconocido")
                 }
             )
@@ -106,7 +102,6 @@ class AuthViewModel(
 
             authRepository.register(email, password, name).fold(
                 onSuccess = {
-                    // After successful registration, login automatically
                     login(email, password)
                 },
                 onFailure = { error ->
@@ -117,13 +112,11 @@ class AuthViewModel(
     }
 
     fun logout() {
-        android.util.Log.d("AuthViewModel", "Logout called")
         viewModelScope.launch {
             authRepository.clearSession()
             currentUsername = null
             isAdmin = false
             _authState.value = AuthState.Unauthenticated
-            android.util.Log.d("AuthViewModel", "Logout completed, state set to Unauthenticated")
         }
     }
 

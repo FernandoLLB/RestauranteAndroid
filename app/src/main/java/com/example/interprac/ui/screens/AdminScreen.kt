@@ -40,7 +40,7 @@ fun AdminScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Offline warning
+
             if (!authViewModel.isOnline) {
                 Card(
                     colors = CardDefaults.cardColors(

@@ -34,7 +34,6 @@ fun SettingsScreenEnhanced(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // User info card
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -76,7 +75,6 @@ fun SettingsScreenEnhanced(
                 }
             }
 
-            // Appearance section
             Text(
                 text = "Apariencia",
                 style = MaterialTheme.typography.titleSmall,
@@ -121,7 +119,6 @@ fun SettingsScreenEnhanced(
                 }
             }
 
-            // About section
             Text(
                 text = "Acerca de",
                 style = MaterialTheme.typography.titleSmall,
@@ -167,7 +164,6 @@ fun SettingsScreenEnhanced(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Logout button
             Button(
                 onClick = onLogoutClick,
                 modifier = Modifier.fillMaxWidth(),

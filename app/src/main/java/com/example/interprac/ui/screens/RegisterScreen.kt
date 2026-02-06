@@ -40,7 +40,6 @@ fun RegisterScreen(
     var confirmPasswordError by remember { mutableStateOf<String?>(null) }
     var nameError by remember { mutableStateOf<String?>(null) }
 
-    // Navigate when authenticated
     LaunchedEffect(authState) {
         if (authState is AuthState.Authenticated) {
             onRegisterSuccess()
@@ -86,7 +85,6 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Offline indicator
             if (!authViewModel.isOnline) {
                 Card(
                     colors = CardDefaults.cardColors(
@@ -104,7 +102,6 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // Name
             OutlinedTextField(
                 value = name,
                 onValueChange = {
@@ -121,7 +118,6 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Email
             OutlinedTextField(
                 value = username,
                 onValueChange = {

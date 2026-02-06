@@ -41,7 +41,6 @@ object NetworkUtils {
 
         connectivityManager.registerNetworkCallback(request, callback)
 
-        // Emit initial state
         trySend(isNetworkAvailable(context))
 
         awaitClose {

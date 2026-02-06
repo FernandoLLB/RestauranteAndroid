@@ -39,32 +39,23 @@ fun AppNavGraph(
     val authState by authViewModel.authState.collectAsState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    // Determine if user is authenticated
     val isAuthenticated = authState is AuthState.Authenticated
 
-    // React to auth state changes - navigate accordingly
     LaunchedEffect(isAuthenticated) {
-        android.util.Log.d("AppNavGraph", "isAuthenticated changed to: $isAuthenticated")
-        android.util.Log.d("AppNavGraph", "Current route: ${navController.currentDestination?.route}")
-
         if (isAuthenticated) {
             val current = navController.currentDestination?.route
             if (current == Routes.LOGIN || current == Routes.REGISTER || current == null) {
-                android.util.Log.d("AppNavGraph", "Navigating to RECIPES")
                 navController.navigate(Routes.RECIPES) {
                     popUpTo(0) { inclusive = true }
                 }
             }
         } else if (authState is AuthState.Unauthenticated) {
-            android.util.Log.d("AppNavGraph", "Navigating to LOGIN")
             navController.navigate(Routes.LOGIN) {
                 popUpTo(0) { inclusive = true }
             }
         }
     }
 
-    // Show bottom nav only when authenticated and on main screens
     val showBottomNav = isAuthenticated &&
             currentRoute in listOf(Routes.RECIPES, Routes.SETTINGS, Routes.ADMIN)
 
@@ -105,7 +96,6 @@ fun AppNavGraph(
             startDestination = Routes.LOGIN,
             modifier = Modifier.padding(innerPadding)
         ) {
-            // Auth screens
             composable(Routes.LOGIN) {
                 LoginScreen(
                     authViewModel = authViewModel,
@@ -134,7 +124,6 @@ fun AppNavGraph(
                 )
             }
 
-            // Main app screens
             composable(Routes.RECIPES) {
                 RecipeListScreen(
                     recipeViewModel = recipeViewModel,
