@@ -45,22 +45,20 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.play.services.location)
 
-    // Room
+
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-    // Retrofit + OkHttp
+
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.gson)
 
-    // Coil for images
-    implementation(libs.coil.compose)
 
-    // Material Icons Extended
+
     implementation(libs.androidx.material.icons.extended)
 
     implementation(libs.androidx.core.ktx)

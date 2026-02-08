@@ -3,27 +3,44 @@ package com.example.interprac.ui.screens
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.interprac.data.local.entity.RecipeEntity
 import com.example.interprac.ui.state.UiState
 import com.example.interprac.ui.viewmodel.AuthViewModel
@@ -31,7 +48,6 @@ import com.example.interprac.ui.viewmodel.RecipeViewModel
 import java.io.File
 import java.io.FileOutputStream
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeFormScreen(
     recipeViewModel: RecipeViewModel,
@@ -43,6 +59,7 @@ fun RecipeFormScreen(
     val saveState by recipeViewModel.saveState.collectAsState()
     val detailState by recipeViewModel.recipeDetailState.collectAsState()
 
+
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var ingredients by remember { mutableStateOf("") }
@@ -51,7 +68,8 @@ fun RecipeFormScreen(
     var difficulty by remember { mutableStateOf(3) }
     var chef by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<String?>(null) }
-    var photoBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var photo by remember { mutableStateOf<Bitmap?>(null) }
+
 
     var hasCameraPermission by remember {
         mutableStateOf(
@@ -60,18 +78,19 @@ fun RecipeFormScreen(
         )
     }
 
-    val cuisineOptions = listOf("Mexicana", "Italiana", "Española", "Asiática", "Americana", "Francesa", "Mediterránea", "Vegetariana", "Otra")
 
     val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted -> hasCameraPermission = granted }
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        hasCameraPermission = granted
+    }
+
 
     val cameraLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.TakePicturePreview()
     ) { bitmap ->
         if (bitmap != null) {
-            photoBitmap = bitmap
-            // Guardar bitmap a archivo y obtener URI
+            photo = bitmap
             val file = File(context.cacheDir, "recipe_photo_${System.currentTimeMillis()}.jpg")
             FileOutputStream(file).use { out ->
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
@@ -80,20 +99,23 @@ fun RecipeFormScreen(
         }
     }
 
+
     val galleryLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
             imageUri = it.toString()
-            photoBitmap = null
+            photo = null
         }
     }
+
 
     LaunchedEffect(recipeId) {
         if (recipeId != null) {
             recipeViewModel.loadRecipeById(recipeId)
         }
     }
+
 
     LaunchedEffect(detailState) {
         if (detailState is UiState.Success) {
@@ -108,6 +130,7 @@ fun RecipeFormScreen(
             imageUri = recipe.imageUri
         }
     }
+
 
     LaunchedEffect(saveState) {
         if (saveState is UiState.Success) {
@@ -126,6 +149,7 @@ fun RecipeFormScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -146,38 +170,56 @@ fun RecipeFormScreen(
             Text((saveState as UiState.Error).message, color = MaterialTheme.colorScheme.error)
         }
 
-        if (photoBitmap != null) {
+
+        if (photo != null) {
+
+            Text("Foto de la receta:")
             Image(
-                bitmap = photoBitmap!!.asImageBitmap(),
-                contentDescription = "Foto",
+                bitmap = photo!!.asImageBitmap(),
+                contentDescription = "Foto de receta",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .clip(MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop
             )
         } else if (!imageUri.isNullOrBlank()) {
-            AsyncImage(
-                model = ImageRequest.Builder(context)
-                    .data(Uri.parse(imageUri))
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "Imagen de receta",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .clip(MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop
-            )
+
+            val loadedBitmap = remember(imageUri) {
+                try {
+                    val uri = Uri.parse(imageUri)
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    BitmapFactory.decodeStream(inputStream)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+
+            if (loadedBitmap != null) {
+                Text("Foto de la receta:")
+                Image(
+                    bitmap = loadedBitmap.asImageBitmap(),
+                    contentDescription = "Foto de receta",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                )
+            } else {
+                Text("No se pudo cargar la imagen")
+            }
+        } else {
+            Text("No hay imagen seleccionada")
         }
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(onClick = {
-                if (hasCameraPermission) cameraLauncher.launch(null)
-                else permissionLauncher.launch(Manifest.permission.CAMERA)
+                if (hasCameraPermission) {
+                    cameraLauncher.launch(null)
+                } else {
+                    permissionLauncher.launch(Manifest.permission.CAMERA)
+                }
             }) { Text("Cámara") }
             OutlinedButton(onClick = { galleryLauncher.launch("image/*") }) { Text("Galería") }
         }
+
 
         OutlinedTextField(
             value = title,
@@ -195,33 +237,22 @@ fun RecipeFormScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        var cuisineExpanded by remember { mutableStateOf(false) }
-        ExposedDropdownMenuBox(
-            expanded = cuisineExpanded,
-            onExpandedChange = { cuisineExpanded = it }
+        Text("Tipo de cocina: $cuisineType")
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OutlinedTextField(
-                value = cuisineType,
-                onValueChange = {},
-                label = { Text("Tipo de cocina") },
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = cuisineExpanded) },
-                modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
-            )
-            ExposedDropdownMenu(
-                expanded = cuisineExpanded,
-                onDismissRequest = { cuisineExpanded = false }
-            ) {
-                cuisineOptions.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(option) },
-                        onClick = {
-                            cuisineType = option
-                            cuisineExpanded = false
-                        }
-                    )
-                }
-            }
+            OutlinedButton(onClick = { cuisineType = "Mexicana" }) { Text("Mexicana") }
+            OutlinedButton(onClick = { cuisineType = "Italiana" }) { Text("Italiana") }
+            OutlinedButton(onClick = { cuisineType = "Española" }) { Text("Española") }
+        }
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedButton(onClick = { cuisineType = "Asiática" }) { Text("Asiática") }
+            OutlinedButton(onClick = { cuisineType = "Americana" }) { Text("Americana") }
+            OutlinedButton(onClick = { cuisineType = "Otra" }) { Text("Otra") }
         }
 
         OutlinedTextField(

@@ -1,22 +1,42 @@
 package com.example.interprac.ui.screens
 
+import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.interprac.data.local.entity.RecipeEntity
 import com.example.interprac.ui.state.UiState
 import com.example.interprac.ui.viewmodel.AuthViewModel
@@ -151,21 +171,29 @@ fun RecipeCard(
 
     ElevatedCard(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(12.dp)) {
-            // Mostrar imagen si existe
+
+
             if (!recipe.imageUri.isNullOrBlank()) {
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(Uri.parse(recipe.imageUri))
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "Imagen de ${recipe.title}",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                        .clip(MaterialTheme.shapes.medium),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                val loadedBitmap = remember(recipe.imageUri) {
+                    try {
+                        val uri = Uri.parse(recipe.imageUri)
+                        val inputStream = context.contentResolver.openInputStream(uri)
+                        BitmapFactory.decodeStream(inputStream)
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
+
+                if (loadedBitmap != null) {
+                    Image(
+                        bitmap = loadedBitmap.asImageBitmap(),
+                        contentDescription = "Imagen de ${recipe.title}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
 
             Text(recipe.title, style = MaterialTheme.typography.titleMedium)
