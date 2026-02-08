@@ -43,7 +43,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Mensaje de error o sin conexión
         if (!authViewModel.isOnline) {
             Text("⚠️ Sin conexión a internet", color = MaterialTheme.colorScheme.error)
         }

@@ -27,22 +27,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Inicialización de canales de notificación
+
         NotificationsHelper.createChannelIfNeeded(this)
 
-        // Creación manual de dependencias (sin Hilt/Dagger)
+
         val settingsRepository = SettingsRepository(applicationContext)
         val authRepository = AuthRepository(applicationContext)
         val database = AppDatabase.getDatabase(applicationContext)
         val recipeRepository = RecipeRepository(database.recipeDao())
 
-        // Inicialización de ViewModels
+
         val settingsViewModel = SettingsViewModel(settingsRepository)
         val authViewModel = AuthViewModel(authRepository, applicationContext)
         val recipeViewModel = RecipeViewModel(recipeRepository, applicationContext)
 
         setContent {
-            // Tema que reacciona al modo oscuro del ViewModel
             InterPracTheme(settingsViewModel.darkMode) {
                 val navController = rememberNavController()
                 Scaffold(

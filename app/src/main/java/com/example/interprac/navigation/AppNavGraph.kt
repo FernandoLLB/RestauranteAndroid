@@ -28,7 +28,6 @@ fun AppNavGraph(
     val currentRoute = navBackStackEntry?.destination?.route
     val isAuthenticated = authState is AuthState.Authenticated
 
-    // Manejo de estado de autenticación
     LaunchedEffect(isAuthenticated) {
         if (isAuthenticated) {
             val current = navController.currentDestination?.route
@@ -84,7 +83,6 @@ fun AppNavGraph(
             startDestination = Routes.LOGIN,
             modifier = Modifier.padding(innerPadding)
         ) {
-            // Pantalla de Login
             composable(Routes.LOGIN) {
                 LoginScreen(
                     authViewModel = authViewModel,
@@ -97,7 +95,6 @@ fun AppNavGraph(
                 )
             }
 
-            // Pantalla de Registro
             composable(Routes.REGISTER) {
                 RegisterScreen(
                     authViewModel = authViewModel,
@@ -110,7 +107,6 @@ fun AppNavGraph(
                 )
             }
 
-            // Pantalla de Lista de Recetas
             composable(Routes.RECIPES) {
                 RecipeListScreen(
                     recipeViewModel = recipeViewModel,
@@ -120,7 +116,6 @@ fun AppNavGraph(
                 )
             }
 
-            // Pantalla de Añadir Receta
             composable(Routes.ADD_RECIPE) {
                 RecipeFormScreen(
                     recipeViewModel = recipeViewModel,
@@ -130,7 +125,6 @@ fun AppNavGraph(
                 )
             }
 
-            // Pantalla de Editar Receta
             composable(
                 route = Routes.EDIT_RECIPE,
                 arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
@@ -144,7 +138,6 @@ fun AppNavGraph(
                 )
             }
 
-            // Pantalla de Ajustes
             composable(Routes.SETTINGS) {
                 SettingsScreen(
                     settingsViewModel = settingsViewModel,
@@ -159,11 +152,9 @@ fun AppNavGraph(
                 )
             }
 
-            // Pantalla de Administración
             composable(Routes.ADMIN) {
                 AdminScreen(authViewModel = authViewModel)
             }
         }
     }
 }
-

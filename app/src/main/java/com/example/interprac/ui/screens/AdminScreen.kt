@@ -73,7 +73,6 @@ fun AdminScreen(authViewModel: AuthViewModel) {
         }
     }
 
-    // Diálogo editar
     showEditDialog?.let { user ->
         EditUserDialog(
             user = user,
@@ -85,7 +84,6 @@ fun AdminScreen(authViewModel: AuthViewModel) {
         )
     }
 
-    // Diálogo eliminar
     showDeleteDialog?.let { user ->
         val isSelf = user.username == authViewModel.currentUsername
         AlertDialog(

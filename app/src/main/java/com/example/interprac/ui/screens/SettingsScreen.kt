@@ -24,7 +24,6 @@ fun SettingsScreen(
     ) {
         Text("AJUSTES", style = MaterialTheme.typography.headlineSmall)
 
-        // Info de usuario
         ElevatedCard(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(16.dp)) {
                 Text("Usuario: $username", style = MaterialTheme.typography.titleMedium)
@@ -32,7 +31,6 @@ fun SettingsScreen(
             }
         }
 
-        // Modo oscuro
         ElevatedCard(Modifier.fillMaxWidth()) {
             Row(
                 Modifier.padding(16.dp),
@@ -51,7 +49,6 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Botón de cerrar sesión
         Button(
             onClick = { showLogoutDialog = true },
             modifier = Modifier.fillMaxWidth(),
@@ -63,7 +60,6 @@ fun SettingsScreen(
         }
     }
 
-    // Diálogo de confirmación de logout
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
@@ -85,4 +81,3 @@ fun SettingsScreen(
         )
     }
 }
-

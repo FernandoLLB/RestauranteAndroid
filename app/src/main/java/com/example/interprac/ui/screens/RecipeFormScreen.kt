@@ -115,7 +115,6 @@ fun RecipeFormScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Header
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -132,12 +131,10 @@ fun RecipeFormScreen(
             }) { Text("Volver") }
         }
 
-        // Error
         if (saveState is UiState.Error) {
             Text((saveState as UiState.Error).message, color = MaterialTheme.colorScheme.error)
         }
 
-        // Imagen
         if (photoBitmap != null) {
             Image(
                 bitmap = photoBitmap!!.asImageBitmap(),
@@ -154,7 +151,6 @@ fun RecipeFormScreen(
             OutlinedButton(onClick = { galleryLauncher.launch("image/*") }) { Text("Galería") }
         }
 
-        // Campos del formulario
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },
@@ -171,7 +167,6 @@ fun RecipeFormScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Tipo de cocina dropdown
         var cuisineExpanded by remember { mutableStateOf(false) }
         ExposedDropdownMenuBox(
             expanded = cuisineExpanded,
@@ -210,7 +205,6 @@ fun RecipeFormScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Dificultad
         Text("Dificultad: $difficulty/5")
         Slider(
             value = difficulty.toFloat(),
@@ -237,7 +231,6 @@ fun RecipeFormScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Guardar
         Button(
             onClick = {
                 if (title.isNotBlank() && chef.isNotBlank() && ingredients.isNotBlank() && description.isNotBlank()) {
@@ -283,4 +276,3 @@ fun RecipeFormScreen(
         }
     }
 }
-

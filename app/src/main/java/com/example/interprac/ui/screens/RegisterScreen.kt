@@ -38,7 +38,6 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Header
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -50,7 +49,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Mensaje de error o sin conexión
         if (!authViewModel.isOnline) {
             Text("⚠️ Sin conexión a internet", color = MaterialTheme.colorScheme.error)
         }

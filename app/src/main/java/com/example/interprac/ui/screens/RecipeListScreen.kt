@@ -37,7 +37,6 @@ fun RecipeListScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Header
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -47,7 +46,6 @@ fun RecipeListScreen(
             Button(onClick = onAddRecipe) { Text("Añadir") }
         }
 
-        // Filtro
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -64,7 +62,6 @@ fun RecipeListScreen(
             )
         }
 
-        // Búsqueda
         OutlinedTextField(
             value = recipeViewModel.searchQuery,
             onValueChange = { recipeViewModel.updateSearchQuery(it) },
@@ -73,7 +70,6 @@ fun RecipeListScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Contenido
         when (val state = recipesState) {
             is UiState.Loading -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -119,7 +115,6 @@ fun RecipeListScreen(
         }
     }
 
-    // Diálogo de eliminar
     showDeleteDialog?.let { recipe ->
         AlertDialog(
             onDismissRequest = { showDeleteDialog = null },
@@ -169,4 +164,3 @@ fun RecipeCard(
         }
     }
 }
-
