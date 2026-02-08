@@ -91,7 +91,7 @@ fun AdminScreen(authViewModel: AuthViewModel) {
             title = { Text("Eliminar usuario") },
             text = {
                 if (isSelf) Text("No puedes eliminarte a ti mismo.")
-                else Text("¿Eliminar a ${user.firstname} ${user.lastname}?")
+                else Text("¿Eliminar a ${user.firstname ?: ""} ${user.lastname ?: ""}?".trim().ifEmpty { "¿Eliminar a @${user.username}?" })
             },
             confirmButton = {
                 if (!isSelf) {
@@ -122,7 +122,7 @@ fun UserCard(
     ElevatedCard(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(12.dp)) {
             Text(
-                "${user.firstname} ${user.lastname}" + if (isSelf) " (Tú)" else "",
+                "${user.firstname ?: ""} ${user.lastname ?: ""}".trim().ifEmpty { user.username } + if (isSelf) " (Tú)" else "",
                 style = MaterialTheme.typography.titleMedium
             )
             Text("@${user.username}")
@@ -148,8 +148,8 @@ fun EditUserDialog(
     onDismiss: () -> Unit,
     onConfirm: (String, String, String) -> Unit
 ) {
-    var firstname by remember { mutableStateOf(user.firstname) }
-    var lastname by remember { mutableStateOf(user.lastname) }
+    var firstname by remember { mutableStateOf(user.firstname ?: "") }
+    var lastname by remember { mutableStateOf(user.lastname ?: "") }
     var role by remember { mutableStateOf(user.role) }
 
     AlertDialog(

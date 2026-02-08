@@ -18,9 +18,9 @@ data class AuthResponse(
 data class UserDto(
     val id: Long,
     val username: String,
-    val firstname: String,
-    val lastname: String,
-    val role: String
+    val firstname: String? = null,
+    val lastname: String? = null,
+    val role: String = "USER"
 )
 
 data class UpdateUserRequest(

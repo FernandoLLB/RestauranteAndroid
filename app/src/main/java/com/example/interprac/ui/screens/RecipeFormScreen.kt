@@ -15,15 +15,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.interprac.data.local.entity.RecipeEntity
 import com.example.interprac.ui.state.UiState
 import com.example.interprac.ui.viewmodel.AuthViewModel
 import com.example.interprac.ui.viewmodel.RecipeViewModel
+import java.io.File
+import java.io.FileOutputStream
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +71,12 @@ fun RecipeFormScreen(
     ) { bitmap ->
         if (bitmap != null) {
             photoBitmap = bitmap
-            imageUri = null
+            // Guardar bitmap a archivo y obtener URI
+            val file = File(context.cacheDir, "recipe_photo_${System.currentTimeMillis()}.jpg")
+            FileOutputStream(file).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            }
+            imageUri = Uri.fromFile(file).toString()
         }
     }
 
@@ -139,7 +150,24 @@ fun RecipeFormScreen(
             Image(
                 bitmap = photoBitmap!!.asImageBitmap(),
                 contentDescription = "Foto",
-                modifier = Modifier.fillMaxWidth().height(150.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .clip(MaterialTheme.shapes.medium),
+                contentScale = ContentScale.Crop
+            )
+        } else if (!imageUri.isNullOrBlank()) {
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(Uri.parse(imageUri))
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Imagen de receta",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .clip(MaterialTheme.shapes.medium),
+                contentScale = ContentScale.Crop
             )
         }
 
