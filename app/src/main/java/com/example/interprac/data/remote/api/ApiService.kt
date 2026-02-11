@@ -28,4 +28,3 @@ interface ApiService {
         @Path("id") userId: Long
     ): Response<Unit>
 }
-

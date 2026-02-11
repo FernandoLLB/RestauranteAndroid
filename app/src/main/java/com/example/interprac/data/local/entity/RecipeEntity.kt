@@ -18,5 +18,3 @@ data class RecipeEntity(
     val createdAt: Long = System.currentTimeMillis(),
     val userId: String
 )
-
-

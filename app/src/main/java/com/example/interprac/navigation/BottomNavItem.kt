@@ -15,4 +15,3 @@ sealed class BottomNavItem(
     object Settings : BottomNavItem(Routes.SETTINGS, Icons.Default.Settings, "Ajustes")
     object Admin : BottomNavItem(Routes.ADMIN, Icons.Default.AdminPanelSettings, "Admin")
 }
-

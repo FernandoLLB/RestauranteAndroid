@@ -176,4 +176,3 @@ class RecipeViewModel(
         _recipeDetailState.value = UiState.Idle
     }
 }
-

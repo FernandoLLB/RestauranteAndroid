@@ -22,4 +22,3 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
 
     suspend fun deleteRecipeById(id: Int) = recipeDao.deleteRecipeById(id)
 }
-

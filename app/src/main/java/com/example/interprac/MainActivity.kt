@@ -27,9 +27,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-
         NotificationsHelper.createChannelIfNeeded(this)
-
 
         val settingsRepository = SettingsRepository(applicationContext)
         val authRepository = AuthRepository(applicationContext)
